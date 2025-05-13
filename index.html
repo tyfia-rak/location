@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Réservations simples</title>
+</head>
+<body>
+
+  <h2>Ajouter une réservation</h2>
+  <input id="nom" placeholder="Nom">
+  <input id="objet" placeholder="Objet">
+  <input type="date" id="debut">
+  <input type="date" id="fin">
+  <button onclick="ajouter()">Ajouter</button>
+
+  <h2>Liste des réservations</h2>
+  <ul id="liste"></ul>
+
+  <script>
+    let id = 1;
+    const reservations = [];
+
+    function ajouter() {
+      const nom = document.getElementById('nom').value;
+      const objet = document.getElementById('objet').value;
+      const debut = document.getElementById('debut').value;
+      const fin = document.getElementById('fin').value;
+
+      if (nom && objet && debut && fin) {
+        const res = {
+          id: id++,
+          nom,
+          objet,
+          debut,
+          fin,
+          statut: 'en attente'
+        };
+        reservations.push(res);
+        afficher();
+        document.getElementById('nom').value = '';
+        document.getElementById('objet').value = '';
+        document.getElementById('debut').value = '';
+        document.getElementById('fin').value = '';
+      }
+    }
+
+    function changerStatut(resId) {
+      const res = reservations.find(r => r.id === resId);
+      if (res) {
+        res.statut = prompt("Nouveau statut :", res.statut) || res.statut;
+        afficher();
+      }
+    }
+
+    function afficher() {
+      const liste = document.getElementById('liste');
+      liste.innerHTML = '';
+      reservations.forEach(r => {
+        const item = document.createElement('li');
+        item.textContent = `${r.nom} a réservé ${r.objet} du ${r.debut} au ${r.fin} [${r.statut}]`;
+        const btn = document.createElement('button');
+        btn.textContent = "Changer statut";
+        btn.onclick = () => changerStatut(r.id);
+        item.appendChild(btn);
+        liste.appendChild(item);
+      });
+    }
+  </script>
+
+</body>
+</html>
